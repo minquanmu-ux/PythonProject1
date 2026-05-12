@@ -19,3 +19,32 @@ def scaled_dot_product_attention(Q, K, V, mask=None):
     output = torch.matmul(weights, V)
 
     return output, weights
+
+
+class EncoderLayer(nn.Module):
+    def __init__(self, d_model, num_heads, d_ff, dropout=0.1):
+        super().__init__()
+        # 多头注意力
+        self.self_attn = MultiHeadAttention(d_model, num_heads)
+        # 前馈网络
+        self.feed_forward = PositionWiseFeedForward(d_model, d_ff)
+        # 层归一化
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+        # Dropout
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x, mask=None):
+        # 第1部分：多头注意力 + 残差 + 归一化
+        attn_output = self.self_attn(x, x, x, mask)
+        x = self.norm1(x + self.dropout(attn_output))
+        #      ↑        ↑
+        #   残差连接  注意力输出
+
+        # 第2部分：前馈网络 + 残差 + 归一化
+        ff_output = self.feed_forward(x)
+        x = self.norm2(x + self.dropout(ff_output))
+        #      ↑        ↑
+        #   残差连接  FFN输出
+
+        return x
