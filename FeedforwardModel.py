@@ -23,3 +23,7 @@ result_vec = embeddings["king"] - embeddings["man"] + embeddings["woman"]
 sim = cosine_similarity(result_vec, embeddings["queen"])
 print(f"king - man + woman的结果向量：{result_vec}")
 print(f"该结果：'queen' 的相似度：{sim:4f}")
+# 神经网络语言模型通过词嵌入，成功解决了 N-gram
+# 模型的泛化能力差的问题。然而，
+# 它仍然有一个类似 N-gram 的限制：上下文窗口是固定的。
+# 它只能考虑固定数量的前文，这为能处理任意长序列的循环神经网络埋下了伏笔。
