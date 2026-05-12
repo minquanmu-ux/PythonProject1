@@ -2,7 +2,12 @@ import torch
 import torch.nn.functional as F
 import math
 
-
+ #--- Q 问 K 求相似，
+除以根号 d_k 值。
+mask 位置填负无穷，
+softmax 变权重值。
+权重乘以 V 得输出，
+十行代码记得住。----
 def scaled_dot_product_attention(Q, K, V, mask=None):
     # 1. 计算 Q 和 K 的相似度
     d_k = Q.size(-1)
